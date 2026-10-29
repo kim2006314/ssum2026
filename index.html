@@ -4,11 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>정기공연 '숨' (SSUM) 초대장</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Pinyon Script & Pretendard -->
+  <!-- 구글 폰트 (Pinyon Script) 및 눈누 폰트 안전 로드 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <style>
     @font-face {
       font-family: 'GmarketSansMedium';
@@ -16,59 +15,22 @@
       font-weight: normal;
       font-style: normal;
     }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: 'Pretendard', sans-serif;
-      background-color: #ffffff; /* 메인 화면 배경 순백색 */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #ffffff;
       color: #414141;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       min-height: 100vh;
+      overflow-x: hidden;
       -webkit-tap-highlight-color: transparent;
     }
-    .font-pinyon {
-      font-family: 'Pinyon Script', cursive;
-    }
-    .font-gmarket {
-      font-family: 'GmarketSansMedium', sans-serif;
-    }
-    /* Floating Paper Animation */
-    @keyframes floatPaper {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(-0.5deg); }
-    }
-    .floating-paper {
-      animation: floatPaper 4s ease-in-out infinite;
-    }
-    /* Slow Blinking Animation */
-    @keyframes slowBlink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-    .blink-slow {
-      animation: slowBlink 2.5s ease-in-out infinite;
-    }
-    /* Glitter Particle Animation */
-    @keyframes glitterAnim {
-      0% {
-        transform: translate(0, 0) scale(0.4) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(var(--tx), var(--ty)) scale(1.3) rotate(180deg);
-        opacity: 0;
-      }
-    }
-    .glitter-particle {
-      position: absolute;
-      pointer-events: none;
-      background: radial-gradient(circle, #ffffff 0%, #ffeef2 60%, rgba(255,255,255,0) 100%);
-      border-radius: 50%;
-      box-shadow: 0 0 10px #ffffff, 0 0 18px #e59fb1;
-      animation: glitterAnim 0.7s forwards ease-out;
-      z-index: 9999;
-    }
-    /* Toast Notification */
+
+    /* 토스트 알림창 */
     #toast {
       visibility: hidden;
       min-width: 280px;
@@ -85,316 +47,448 @@
       font-size: 14px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       transition: opacity 0.3s, visibility 0.3s;
+      opacity: 0;
     }
     #toast.show {
       visibility: visible;
       opacity: 1;
     }
+
+    /* 1. 인트로 화면 (가로 편지지) */
+    #intro-screen {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(247, 249, 251, 0.96);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      transition: opacity 0.6s ease;
+      cursor: pointer;
+      padding: 20px;
+    }
+
+    .envelope-box {
+      background: #ffffff;
+      width: 100%;
+      max-width: 440px;
+      aspect-ratio: 1.4 / 1;
+      border-radius: 24px;
+      box-shadow: 0 15px 35px rgba(65, 65, 65, 0.12);
+      border: 1px solid #f0f0f0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      animation: floatPaper 3.5s ease-in-out infinite;
+    }
+
+    @keyframes floatPaper {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .paper-clip {
+      position: absolute;
+      top: -10px;
+      right: 36px;
+      width: 22px;
+      height: 44px;
+      background-color: #e59fb1;
+      border-radius: 9999px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+      border: 2px solid #ffffff;
+      transform: rotate(12deg);
+    }
+
+    .intro-ssum {
+      font-family: 'Pinyon Script', cursive;
+      font-size: 110px;
+      color: #414141;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .intro-title {
+      font-family: 'GmarketSansMedium', sans-serif;
+      font-size: 20px;
+      color: #414141;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
+    .intro-touch {
+      font-family: 'GmarketSansMedium', sans-serif;
+      font-size: 13px;
+      color: #e59fb1;
+      animation: slowBlink 2s ease-in-out infinite;
+    }
+
+    @keyframes slowBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    /* 2. 메인 컨테이너 */
+    .main-container {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px 40px 20px;
+      background-color: #ffffff;
+    }
+
+    /* 포스터 이미지 */
+    .poster-box {
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(65, 65, 65, 0.08);
+      margin-bottom: 20px;
+      background-color: #ffffff;
+    }
+    .poster-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    /* 공연 정보 카드 (단어 단위 줄바꿈 유지) */
+    .info-card {
+      width: 100%;
+      background-color: #ffffff;
+      border: 1px solid #747474;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .info-card h3 {
+      font-family: 'GmarketSansMedium', sans-serif;
+      font-size: 17px;
+      color: #414141;
+      font-weight: bold;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .info-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #e59fb1;
+      display: inline-block;
+    }
+    .info-content p {
+      font-size: 14px;
+      color: #414141;
+      font-weight: 500;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      word-break: keep-all;
+    }
+    .info-content p:last-child { margin-bottom: 0; }
+
+    /* 버튼 그룹 */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 14px;
+      font-family: 'GmarketSansMedium', sans-serif;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      display: block;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-kakao { background-color: #fee500; color: #191919; }
+    .btn-naver { background-color: #03c75a; color: #ffffff; }
+
+    /* 친구에게 공유하기 */
+    .share-section {
+      width: 100%;
+      background-color: #ffffff;
+      border: 1px solid #747474;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .share-title {
+      font-family: 'GmarketSansMedium', sans-serif;
+      font-size: 16px;
+      color: #414141;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .share-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .btn-share {
+      padding: 12px 4px;
+      border-radius: 12px;
+      font-family: 'GmarketSansMedium', sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-share:active { transform: scale(0.95); }
+    .btn-share-kakao { background-color: #fee500; color: #191919; }
+    .btn-share-insta { background-color: #e1306c; color: #ffffff; }
+    .btn-share-copy {
+      background-color: #ffffff;
+      border: 1px solid #747474;
+      color: #414141;
+    }
+
+    .footer {
+      margin-top: auto;
+      padding-top: 16px;
+      text-align: center;
+      font-size: 12px;
+      color: #747474;
+    }
+
+    /* 글리터 입자 */
+    .glitter-particle {
+      position: absolute;
+      pointer-events: none;
+      background: radial-gradient(circle, #ffffff 0%, #ffeef2 60%, rgba(255,255,255,0) 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 8px #ffffff, 0 0 14px #e59fb1;
+      animation: glitterAnim 0.6s forwards ease-out;
+      z-index: 9999;
+    }
+    @keyframes glitterAnim {
+      0% { transform: translate(0, 0) scale(0.4); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1.2); opacity: 0; }
+    }
   </style>
 </head>
-<body class="flex flex-col items-center justify-start min-h-screen">
+<body>
 
-  <!-- Toast Message Box -->
   <div id="toast">주소가 복사되었습니다! 필요한 곳에 붙여넣기 하세요!</div>
 
-  <!-- INTRO OVERLAY SCREEN -->
-  <div id="intro-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#f7f9fb]/95 backdrop-blur-md transition-opacity duration-700 p-4 cursor-pointer" onclick="openInvitation(event)">
-    
-    <!-- Landscape Letter Paper Card -->
-    <div class="relative w-full max-w-[460px] aspect-[1.4/1] bg-white rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-[0_20px_50px_rgba(65,65,65,0.1)] border border-gray-100 floating-paper transition-transform active:scale-95">
-      
-      <!-- Top Right Small Paper Clip (#e59fb1) -->
-      <div class="absolute -top-3 right-10 w-6 h-12 bg-[#e59fb1] rounded-full shadow-md border-2 border-white flex items-center justify-center transform rotate-12">
-        <div class="w-2.5 h-7 bg-white/40 rounded-full"></div>
-      </div>
-
-      <!-- Ssum Title (Pinyon Script, 130px, #414141) -->
-      <h1 class="font-pinyon text-[110px] sm:text-[130px] leading-none text-[#414141] mb-1 select-none">Ssum</h1>
-
-      <!-- Subtitle: 정기공연 '숨' (Gmarket Sans, 22px, #414141) -->
-      <h2 class="font-gmarket text-[20px] sm:text-[22px] text-[#414141] font-bold tracking-tight mb-6 select-none">
-        정기공연 '숨'
-      </h2>
-
-      <!-- Footer Touch Instruction (Gmarket Sans, 13px, #e59fb1, Slow Blink) -->
-      <p class="font-gmarket text-[13px] text-[#e59fb1] tracking-wider blink-slow select-none">
-        초대장을 터치하세요!
-      </p>
-
+  <!-- 1. 오프닝 카드 -->
+  <div id="intro-screen" onclick="openInvitation(event)">
+    <div class="envelope-box">
+      <div class="paper-clip"></div>
+      <h1 class="intro-ssum">Ssum</h1>
+      <h2 class="intro-title">정기공연 '숨'</h2>
+      <p class="intro-touch">초대장을 터치하세요!</p>
     </div>
   </div>
 
-  <!-- MAIN APP CONTAINER (Unified Background, No separate box wrapping everything) -->
-  <div class="w-full max-w-[480px] min-h-screen flex flex-col px-5 py-8 pb-16 bg-white">
-
-    <!-- Poster Banner Area ("정기공연10 (4).jpg") -->
-    <div class="w-full mb-6 rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(65,65,65,0.06)] bg-white">
-      <img src="정기공연10 (4).jpg" alt="정기공연 '숨' 포스터" class="w-full h-auto object-cover block" onerror="this.src='정기공연10 (4).png'; this.onerror=function(){this.src='https://placehold.co/600x850/ffffff/414141?text=SSUM+Concert+Poster';}">
+  <!-- 2. 메인 컨테이너 -->
+  <div class="main-container">
+    
+    <!-- 포스터 (정기공연10 (4).jpg) -->
+    <div class="poster-box">
+      <img src="정기공연10 (4).jpg" alt="정기공연 '숨' 포스터" onerror="this.src='정기공연10 (4).png'; this.onerror=function(){this.style.display='none';}">
     </div>
 
-    <!-- Performance Info Card -->
-    <div class="w-full bg-white border border-[#747474] rounded-2xl p-6 mb-6 shadow-sm">
-      <h3 class="font-gmarket text-[18px] text-[#414141] font-bold mb-4 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-[#e59fb1]"></span> 공연 정보
-      </h3>
-      <div class="space-y-2.5 text-[15px] text-[#414141] font-medium leading-relaxed">
-        <p><b class="font-semibold text-[#414141]">일시:</b> 2026년 11월 27일 (금) 저녁 7:00</p>
-        <p><b class="font-semibold text-[#414141]">주최:</b> 숭실대학교 글로벌미래교육원 실용음악학 전공</p>
-        <p><b class="font-semibold text-[#414141]">장소:</b> 숭실대학교 학생회관 1층 블루큐브</p>
-        <p><b class="font-semibold text-[#414141]">주소:</b> 서울시 동작구 상도로 369</p>
+    <!-- 공연 정보 -->
+    <div class="info-card">
+      <h3><span class="info-dot"></span> 공연 정보</h3>
+      <div class="info-content">
+        <p><b>일시:</b> 2026년 11월 27일 (금) 저녁 7:00</p>
+        <p><b>주최:</b> 숭실대학교 글로벌미래교육원 실용음악학 전공</p>
+        <p><b>장소:</b> 숭실대학교 학생회관 1층 블루큐브</p>
+        <p><b>주소:</b> 서울시 동작구 상도로 369</p>
       </div>
     </div>
 
-    <!-- Directions Button Group -->
-    <div class="flex flex-col gap-3 mb-6">
-      <!-- Kakao Map Button -->
-      <a href="https://map.kakao.com/link/to/숭실대학교학생회관,37.4963,126.9573" target="_blank" onclick="playDdoingSound()" class="w-full py-4 px-6 bg-[#fee500] hover:bg-[#fdd800] text-[#191919] font-gmarket text-[15px] font-bold rounded-2xl shadow-sm text-center transition-all transform active:scale-98 flex items-center justify-center">
+    <!-- 길찾기 -->
+    <div class="btn-group">
+      <a href="https://map.kakao.com/link/to/숭실대학교학생회관,37.4963,126.9573" target="_blank" onclick="playDdoingSound()" class="btn btn-kakao">
         카카오맵 길찾기
       </a>
-      
-      <!-- Naver Map Button -->
-      <a href="https://map.naver.com/v5/search/숭실대학교학생회관" target="_blank" onclick="playDdoingSound()" class="w-full py-4 px-6 bg-[#03c75a] hover:bg-[#02b350] text-white font-gmarket text-[15px] font-bold rounded-2xl shadow-sm text-center transition-all transform active:scale-98 flex items-center justify-center">
+      <a href="https://map.naver.com/v5/search/숭실대학교학생회관" target="_blank" onclick="playDdoingSound()" class="btn btn-naver">
         네이버 지도 길찾기
       </a>
     </div>
 
-    <!-- Share Section ("친구에게 공유하기!") -->
-    <div class="w-full bg-white border border-[#747474] rounded-2xl p-6 shadow-sm mb-4">
-      <h4 class="font-gmarket text-[16px] text-[#414141] font-bold mb-4 text-center">
-        친구에게 공유하기!
-      </h4>
-
-      <!-- Share Action Buttons (Kakao, Insta, Copy) - No Emojis, Native Colors -->
-      <div class="grid grid-cols-3 gap-2.5">
-        <!-- KakaoTalk Share Button -->
-        <button onclick="shareKakao(event)" class="py-3 px-2 bg-[#fee500] hover:bg-[#fdd800] text-[#191919] font-gmarket text-[13px] font-bold rounded-xl shadow-sm transition-all transform active:scale-95 flex items-center justify-center">
-          카카오톡
-        </button>
-
-        <!-- Instagram Share Button -->
-        <button onclick="shareInstagram(event)" class="py-3 px-2 bg-[#e1306c] hover:bg-[#c1225b] text-white font-gmarket text-[13px] font-bold rounded-xl shadow-sm transition-all transform active:scale-95 flex items-center justify-center">
-          인스타그램
-        </button>
-
-        <!-- Copy Address Button -->
-        <button onclick="copyAddress(event)" class="py-3 px-2 bg-white border border-[#747474] text-[#414141] hover:bg-gray-50 font-gmarket text-[12px] font-bold rounded-xl shadow-sm transition-all transform active:scale-95 flex items-center justify-center">
-          주소 복사하기
-        </button>
+    <!-- 공유하기 -->
+    <div class="share-section">
+      <h4 class="share-title">친구에게 공유하기!</h4>
+      <div class="share-grid">
+        <button onclick="shareKakao(event)" class="btn-share btn-share-kakao">카카오톡</button>
+        <button onclick="shareInstagram(event)" class="btn-share btn-share-insta">인스타그램</button>
+        <button onclick="copyAddress(event)" class="btn-share btn-share-copy">주소 복사하기</button>
       </div>
     </div>
 
-    <!-- Footer Credit -->
-    <div class="mt-auto pt-6 text-center text-xs text-[#747474]">
-      <p>© 2026 숭실대학교 글로벌미래교육원 실용음악전공</p>
+    <div class="footer">
+      <p>© 2026 숭실대학교 글로벌미래교육원 실용음악학전공</p>
     </div>
 
   </div>
 
-  <!-- JavaScript Audio & Interaction Logic -->
   <script>
     let audioCtx = null;
 
     function getAudioContext() {
       if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
       }
-      if (audioCtx.state === 'suspended') {
+      if (audioCtx && audioCtx.state === 'suspended') {
         audioCtx.resume();
       }
       return audioCtx;
     }
 
-    // Paper Turning / Rustling Sound
     function playPaperSound() {
       try {
         const ctx = getAudioContext();
-        const bufferSize = ctx.sampleRate * 0.5; // 500ms
+        if (!ctx) return;
+        const bufferSize = ctx.sampleRate * 0.4;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
-        
         for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.2));
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.15));
         }
-
         const noise = ctx.createBufferSource();
         noise.buffer = buffer;
-
         const filter = ctx.createBiquadFilter();
         filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(1200, ctx.currentTime);
-        filter.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.5);
-        filter.Q.value = 4;
-
+        filter.frequency.setValueAtTime(1000, ctx.currentTime);
+        filter.Q.value = 3;
         const gain = ctx.createGain();
-        gain.gain.setValueAtTime(0.7, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-
+        gain.gain.setValueAtTime(0.5, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
         noise.connect(filter);
         filter.connect(gain);
         gain.connect(ctx.destination);
-
         noise.start();
-      } catch(e) {
-        console.log("Audio error:", e);
-      }
+      } catch(e) {}
     }
 
-    // Cute Ddoing Pitch Bend Sound
     function playDdoingSound() {
       try {
         const ctx = getAudioContext();
+        if (!ctx) return;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-
         osc.type = 'sine';
         const startTime = ctx.currentTime;
-        
-        osc.frequency.setValueAtTime(520, startTime);
-        osc.frequency.exponentialRampToValueAtTime(880, startTime + 0.2);
-
-        gain.gain.setValueAtTime(0.3, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.25);
-
+        osc.frequency.setValueAtTime(500, startTime);
+        osc.frequency.exponentialRampToValueAtTime(850, startTime + 0.18);
+        gain.gain.setValueAtTime(0.25, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.2);
         osc.connect(gain);
         gain.connect(ctx.destination);
-
         osc.start(startTime);
-        osc.stop(startTime + 0.25);
-      } catch(e) {
-        console.log("Audio error:", e);
-      }
+        osc.stop(startTime + 0.2);
+      } catch(e) {}
     }
 
-    // Glitter Particle Effect on Click + Ddoing sound
     document.addEventListener('click', function(e) {
       playDdoingSound();
-
-      const count = 12;
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < 8; i++) {
         const glitter = document.createElement('div');
         glitter.className = 'glitter-particle';
-        
-        const size = Math.random() * 8 + 6;
-        glitter.style.width = `${size}px`;
-        glitter.style.height = `${size}px`;
-        
-        glitter.style.left = `${e.pageX}px`;
-        glitter.style.top = `${e.pageY}px`;
-
+        const size = Math.random() * 6 + 6;
+        glitter.style.width = size + 'px';
+        glitter.style.height = size + 'px';
+        glitter.style.left = e.pageX + 'px';
+        glitter.style.top = e.pageY + 'px';
         const angle = Math.random() * Math.PI * 2;
-        const distance = Math.random() * 70 + 20;
-        const tx = Math.cos(angle) * distance;
-        const ty = Math.sin(angle) * distance;
-
-        glitter.style.setProperty('--tx', `${tx}px`);
-        glitter.style.setProperty('--ty', `${ty}px`);
-
+        const distance = Math.random() * 50 + 15;
+        glitter.style.setProperty('--tx', (Math.cos(angle) * distance) + 'px');
+        glitter.style.setProperty('--ty', (Math.sin(angle) * distance) + 'px');
         document.body.appendChild(glitter);
-        setTimeout(() => glitter.remove(), 700);
+        setTimeout(function() { glitter.remove(); }, 600);
       }
     });
 
-    // Open Invitation Handler
     function openInvitation(event) {
       event.stopPropagation();
       playPaperSound();
       playDdoingSound();
-
       const intro = document.getElementById('intro-screen');
       intro.style.opacity = '0';
-      setTimeout(() => {
+      setTimeout(function() {
         intro.style.display = 'none';
-      }, 700);
+      }, 600);
     }
 
-    // Copy Address Handler
     function copyAddress(event) {
       event.stopPropagation();
       playDdoingSound();
-      
       const address = "서울시 동작구 상도로 369 숭실대학교 학생회관 1층 블루큐브";
-      
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(address).then(() => {
-          showToast();
-        }).catch(() => {
-          fallbackCopyText(address);
-        });
+        navigator.clipboard.writeText(address).then(showToast).catch(function() { fallbackCopy(address); });
       } else {
-        fallbackCopyText(address);
+        fallbackCopy(address);
       }
     }
 
-    function fallbackCopyText(text) {
-      const textarea = document.createElement("textarea");
-      textarea.value = text;
-      textarea.style.position = "fixed";
-      document.body.appendChild(textarea);
-      textarea.focus();
-      textarea.select();
-      try {
-        document.execCommand('copy');
-        showToast();
-      } catch (err) {
-        console.error('Fallback copy failed', err);
-      }
-      document.body.removeChild(textarea);
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); showToast(); } catch (e) {}
+      document.body.removeChild(ta);
     }
 
     function showToast() {
       const toast = document.getElementById("toast");
       toast.className = "show";
-      setTimeout(() => {
-        toast.className = toast.className.replace("show", "");
-      }, 3000);
+      setTimeout(function() { toast.className = ""; }, 3000);
     }
 
-    // Kakao Share Handler
     function shareKakao(event) {
       event.stopPropagation();
       playDdoingSound();
-      const shareUrl = window.location.href;
-      const shareText = "당신을 초대합니다! 숭실대학교 글로벌미래교육원 실용음악전공 정기공연 '숨'";
-
+      const url = window.location.href;
+      const text = "당신을 초대합니다! 숭실대학교 글로벌미래교육원 실용음악전공 정기공연 '숨'";
       if (navigator.share) {
-        navigator.share({
-          title: "정기공연 '숨'",
-          text: shareText,
-          url: shareUrl,
-        }).catch(() => {});
+        navigator.share({ title: "정기공연 '숨'", text: text, url: url }).catch(function(){});
       } else {
-        const kakaoIntentUrl = `https://sharer.kakao.com/talk/friends/picker/link?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
-        window.open(kakaoIntentUrl, '_blank');
+        window.open("https://sharer.kakao.com/talk/friends/picker/link?url=" + encodeURIComponent(url) + "&text=" + encodeURIComponent(text), '_blank');
       }
     }
 
-    // Instagram Share Handler
     function shareInstagram(event) {
       event.stopPropagation();
       playDdoingSound();
-      
-      const inviteMsg = "당신을 초대합니다! 숭실대학교 글로벌미래교육원 실용음악전공 정기공연 '숨' 초대장 링크: " + window.location.href;
-      
+      const msg = "당신을 초대합니다! 숭실대학교 글로벌미래교육원 실용음악전공 정기공연 '숨' 초대장: " + window.location.href;
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(inviteMsg).then(() => {
+        navigator.clipboard.writeText(msg).then(function() {
           const toast = document.getElementById("toast");
           toast.innerText = "초대장 문구가 복사되었습니다! 인스타그램 DM에 붙여넣기 하세요.";
           toast.className = "show";
-          setTimeout(() => {
-            toast.className = toast.className.replace("show", "");
+          setTimeout(function() {
+            toast.className = "";
             toast.innerText = "주소가 복사되었습니다! 필요한 곳에 붙여넣기 하세요!";
           }, 3500);
         });
       }
-
-      setTimeout(() => {
-        window.location.href = "instagram://app";
-        setTimeout(() => {
-          window.open("https://www.instagram.com", "_blank");
-        }, 1000);
-      }, 500);
     }
   </script>
-
 </body>
 </html>
