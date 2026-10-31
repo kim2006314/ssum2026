@@ -338,7 +338,7 @@
     </div>
 
     <div class="footer">
-      <p>© 2026 숭실대학교 글로벌미래교육원 실용음악학전공</p>
+      <p>© 2026 숭실대학교 글로벌미래교육원 실용음악학 전공</p>
     </div>
 
   </div>
@@ -465,7 +465,7 @@
       event.stopPropagation();
       playDdoingSound();
       const url = window.location.href;
-      const text = "당신을 초대합니다! 숭실대학교 글로벌미래교육원 실용음악전공 정기공연 '숨'";
+      const text = "당신을 초대합니다! 숭실대학교 글로벌미래교육원 실용음악학 전공 정기공연 '숨'";
       if (navigator.share) {
         navigator.share({ title: "정기공연 '숨'", text: text, url: url }).catch(function(){});
       } else {
@@ -476,7 +476,7 @@
     function shareInstagram(event) {
       event.stopPropagation();
       playDdoingSound();
-      const msg = "당신을 초대합니다! 숭실대학교 글로벌미래교육원 실용음악전공 정기공연 '숨' 초대장: " + window.location.href;
+      const msg = "당신을 초대합니다! 숭실대학교 글로벌미래교육원 실용음악학 전공 정기공연 '숨' 초대장: " + window.location.href;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(msg).then(function() {
           const toast = document.getElementById("toast");
